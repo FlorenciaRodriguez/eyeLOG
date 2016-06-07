@@ -15,19 +15,13 @@ import javax.mail.internet.MimeMessage;
 
 public class SendEmail {
 
-	private static String USER_NAME = "eyelog2016"; // GMail user name (just the
-													// part before "@gmail.com")
-	private static String PASSWORD = "2016eyelog"; // GMail password
-	private static String RECIPIENT = "marrodriguez@alumnos.exa.unicen.edu.ar";
+	private static String USER_NAME = "eyelog2016"; 
+	private static String PASSWORD = "2016eyelog"; 
+	private static String RECIPIENT = "eyelog2016@gmail.com";
 
 	public static void main(String[] args) {
-//		 String from = USER_NAME;
-//		 String pass = PASSWORD;
-//		 String[] to = { RECIPIENT }; // list of recipient email addresses
-//		 String subject = "Java send mail example";
-//		 String body = "Welcome to JavaMail!";
 
-//		 sendFromGMail(from, pass, to, subject, body);
+		 sendFromGMail();
 	}
 
 	public static void sendFromGMail() {

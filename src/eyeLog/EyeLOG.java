@@ -95,7 +95,7 @@ public class EyeLOG implements Runnable {
 	/**
 	 * Path del clasificador de ojos
 	 */
-	private static final String classifierNameEye = "cascades\\eyes\\haarcascade_eye.xml";
+	private static final String classifierNameEye = "cascades\\eyes\\frontalEyes35x16.xml";
 
 	/**
 	 * Método main
@@ -130,6 +130,17 @@ public class EyeLOG implements Runnable {
 	 * 
 	 */
 	public void detect(int tiempoEjecucion, char hms, long tiempoRegistroCamara) {
+		// Para capturar la imagen
+		FrameGrabber grabber = null;
+		try {
+			grabber = FrameGrabber.createDefault(0);
+		} catch (Exception e) {
+			System.out.println("No se creó el objeto que captura el video");
+		}
+
+		// un id para referenciar y guardar la imagen
+		int idImg = 0;
+
 		CvMemStorage storage = CvMemStorage.create();
 
 		Calendar calendar = Calendar.getInstance();
@@ -142,17 +153,6 @@ public class EyeLOG implements Runnable {
 			calendar2.add(Calendar.MINUTE, tiempoEjecucion);
 		if (hms == 's')
 			calendar2.add(Calendar.SECOND, tiempoEjecucion);
-
-		// Para capturar la imagen
-		FrameGrabber grabber = null;
-		try {
-			grabber = FrameGrabber.createDefault(0);
-		} catch (Exception e) {
-			System.out.println("No se creó el objeto que captura el video");
-		}
-
-		// un id para referenciar y guardar la imagen
-		int idImg = 0;
 
 		// Ejecuta según el tiempo especificado
 		while ((calendar.compareTo(calendar2) < 0)) {
@@ -272,14 +272,13 @@ public class EyeLOG implements Runnable {
 		}
 		zipAndSend();
 	}
-
+private BufferedWriter bw;
 	public EyeLOG() {
-
 		// Creación de carpetas y archivos de salida
 		File folder = new File(FOLDER_IMAGE);
 		folder.mkdirs();
 		String sFichero = ARCHIVO_LOG;
-		BufferedWriter bw = null;
+		bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(sFichero));
 			bw.write(ENCABEZADO_ARCHIVO_LOG_CSV + "\n");
@@ -306,10 +305,6 @@ public class EyeLOG implements Runnable {
 	private CvHaarClassifierCascade classifierEyeRight;
 	private CvHaarClassifierCascade classifierEye;
 
-	/**
-	 * Para escribir el csv
-	 */
-	private BufferedWriter bw;
 
 	/**
 	 * Zip info and send email
