@@ -62,7 +62,7 @@ public class SendEmail {
 			Calendar calendar = Calendar.getInstance();
 			Date now = calendar.getTime();
 			
-			String filename = "eyeLOG_"+now.getTime()+".zip";
+			String filename = "eyeLOG.zip";
 			DataSource source = new FileDataSource(filename);
 			message.setDataHandler(new DataHandler(source));
 			message.setFileName(filename);
