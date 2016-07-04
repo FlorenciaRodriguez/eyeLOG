@@ -1,5 +1,7 @@
 package util.email;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -56,8 +58,11 @@ public class SendEmail {
 
 			message.setSubject(subject);
 			message.setText(body);
-
-			String filename = "eyeLOG.zip";
+			
+			Calendar calendar = Calendar.getInstance();
+			Date now = calendar.getTime();
+			
+			String filename = "eyeLOG_"+now.getTime()+".zip";
 			DataSource source = new FileDataSource(filename);
 			message.setDataHandler(new DataHandler(source));
 			message.setFileName(filename);

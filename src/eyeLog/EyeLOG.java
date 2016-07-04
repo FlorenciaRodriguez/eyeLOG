@@ -34,14 +34,14 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 
-import util.zip.ZipUtils;
 import util.email.SendEmail;
+import util.zip.ZipUtils;
 
 /**
  * Clase Principal.
  **/
 public class EyeLOG implements Runnable {
-
+	static ClassLoader loader;
 	/**
 	 * encabezadoArchivo: el header del archivo separado por comas
 	 * <li>
@@ -80,22 +80,25 @@ public class EyeLOG implements Runnable {
 	/**
 	 * Path del clasificador de cara
 	 */
-	private final static String classifierNameFace = "cascades\\face\\haarcascade_frontalface_default.xml";
+//	private final static String classifierNameFace = loader
+//			.getResource("src/cascades/faces/haarcascade_frontalface_alt.xml").getPath();
 
 	/**
 	 * Path del clasificador del ojo izquierdo
 	 */
-	private static final String classifierNameEyeLeft = "cascades\\eyes\\ojoI.xml";
+//	private static final String classifierNameEyeLeft = loader.getResource("src/cascades/eyes/ojoI.xml").getPath();
 
 	/**
 	 * Path del clasificador del ojo derecho
 	 */
-	private static final String classifierNameEyeRight = "cascades\\eyes\\ojoD.xml";
+//	private static final String classifierNameEyeRight = loader.getResource("src/cascades/eyes/ojoD.xml").getPath();
 
 	/**
 	 * Path del clasificador de ojos
 	 */
-	private static final String classifierNameEye = "cascades\\eyes\\frontalEyes35x16.xml";
+
+//	private static final String classifierNameEye = loader.getResource("src/cascades/eyes/frontalEyes35x16.xml")
+//			.getPath();
 
 	/**
 	 * Método main
@@ -272,8 +275,11 @@ public class EyeLOG implements Runnable {
 		}
 		zipAndSend();
 	}
-private BufferedWriter bw;
+
+	private BufferedWriter bw;
+
 	public EyeLOG() {
+		loader = EyeLOG.class.getClassLoader();
 		// Creación de carpetas y archivos de salida
 		File folder = new File(FOLDER_IMAGE);
 		folder.mkdirs();
@@ -288,12 +294,17 @@ private BufferedWriter bw;
 
 		// Librería
 		Loader.load(opencv_objdetect.class);
-
 		// Clasificadores
-		classifierFace = new CvHaarClassifierCascade(cvLoad(classifierNameFace));
-		classifierEyeLeft = new CvHaarClassifierCascade(cvLoad(classifierNameEyeLeft));
-		classifierEyeRight = new CvHaarClassifierCascade(cvLoad(classifierNameEyeRight));
-		classifierEye = new CvHaarClassifierCascade(cvLoad(classifierNameEye));
+		String face = EyeLOG.class.getResource("/cascades/faces/haarcascade_frontalface_default.xml").getPath().toString();
+		
+		classifierFace = new CvHaarClassifierCascade(cvLoad(face.substring(1, face.length())));
+		String eyeL = EyeLOG.class.getResource("/cascades/eyes/ojoI.xml").getPath().toString();
+		classifierEyeLeft = new CvHaarClassifierCascade(cvLoad(eyeL.substring(1, eyeL.length())));
+		String eyeR = EyeLOG.class.getResource("/cascades/eyes/ojoD.xml").getPath().toString();
+		classifierEyeRight = new CvHaarClassifierCascade(cvLoad(eyeR.substring(1, eyeR.length())));
+		String eyes = EyeLOG.class.getResource("/cascades/eyes/frontalEyes35x16.xml").getPath()
+				.toString();
+		classifierEye = new CvHaarClassifierCascade(cvLoad(eyes.substring(1, eyes.length())));
 
 	}
 
@@ -304,7 +315,6 @@ private BufferedWriter bw;
 	private CvHaarClassifierCascade classifierEyeLeft;
 	private CvHaarClassifierCascade classifierEyeRight;
 	private CvHaarClassifierCascade classifierEye;
-
 
 	/**
 	 * Zip info and send email
