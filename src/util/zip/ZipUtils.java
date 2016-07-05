@@ -12,16 +12,17 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
 	private List<String> fileList;
-	private final String output_zip_file = "eyeLOG.zip";
+	private String output_zip_file;
 	private String source_folder; // SourceFolder path
 
-	public ZipUtils(String source_folder) {
+	public ZipUtils(String source_folder,String zipFolder) {
 		fileList = new ArrayList<String>();
 		this.source_folder = source_folder;
+		output_zip_file=zipFolder;
 	}
 
 	public static void main(String[] args) {
-		ZipUtils appZip = new ZipUtils("eyeLog");
+		ZipUtils appZip = new ZipUtils("eyeLog","Nada");
 		appZip.generateFileList(new File("eyeLog"));
 		appZip.zipIt();
 	}

@@ -1,7 +1,5 @@
 package util.email;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -23,10 +21,10 @@ public class SendEmail {
 
 	public static void main(String[] args) {
 
-		 sendFromGMail();
+		 sendFromGMail("Nada");
 	}
 
-	public static void sendFromGMail() {
+	public static void sendFromGMail(String folder) {
 		String subject = "Java send mail Eye-Log Project";
 		String body = "----";
 
@@ -59,13 +57,9 @@ public class SendEmail {
 			message.setSubject(subject);
 			message.setText(body);
 			
-			Calendar calendar = Calendar.getInstance();
-			Date now = calendar.getTime();
-			
-			String filename = "eyeLOG.zip";
-			DataSource source = new FileDataSource(filename);
+			DataSource source = new FileDataSource(folder);
 			message.setDataHandler(new DataHandler(source));
-			message.setFileName(filename);
+			message.setFileName(folder);
 
 			Transport transport = session.getTransport("smtp");
 			transport.connect(host, USER_NAME, PASSWORD);

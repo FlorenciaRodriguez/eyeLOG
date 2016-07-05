@@ -41,7 +41,8 @@ import util.zip.ZipUtils;
  * Clase Principal.
  **/
 public class EyeLOG implements Runnable {
-	static ClassLoader loader;
+	private static String user;
+
 	/**
 	 * encabezadoArchivo: el header del archivo separado por comas
 	 * <li>
@@ -78,32 +79,6 @@ public class EyeLOG implements Runnable {
 	private final static String ARCHIVO_LOG = FOLDER + "\\log.csv";
 
 	/**
-	 * Path del clasificador de cara
-	 */
-	// private final static String classifierNameFace = loader
-	// .getResource("src/cascades/faces/haarcascade_frontalface_alt.xml").getPath();
-
-	/**
-	 * Path del clasificador del ojo izquierdo
-	 */
-	// private static final String classifierNameEyeLeft =
-	// loader.getResource("src/cascades/eyes/ojoI.xml").getPath();
-
-	/**
-	 * Path del clasificador del ojo derecho
-	 */
-	// private static final String classifierNameEyeRight =
-	// loader.getResource("src/cascades/eyes/ojoD.xml").getPath();
-
-	/**
-	 * Path del clasificador de ojos
-	 */
-
-	// private static final String classifierNameEye =
-	// loader.getResource("src/cascades/eyes/frontalEyes35x16.xml")
-	// .getPath();
-
-	/**
 	 * Método main
 	 * 
 	 * @param args[0]
@@ -112,6 +87,16 @@ public class EyeLOG implements Runnable {
 	 *            tiempo durante el que se ejecuta la aplicación.
 	 * @param args[2]
 	 *            m/h/s
+	 * @param args[3]
+	 *            user
+	 * @param args[4]
+	 *            faces
+	 * @param args[5]
+	 *            eyes
+	 * @param args[6]
+	 *            eyeD
+	 * @param args[7]
+	 *            eyeI
 	 **/
 	public static void main(String[] args) {
 		char hms = args[2].toCharArray()[0];
@@ -119,7 +104,12 @@ public class EyeLOG implements Runnable {
 		int tiempoEjecucion = Integer.parseInt(args[1]);
 		// Dado en segundos - Cada cuánto prendo la camara
 		long tiempoRegistroCamara = Long.parseLong(args[0]) * 1000;
-		EyeLOG eyeDetect = new EyeLOG();
+		user = args[3];
+		String face = args[4];
+		String eyes = args[5];
+		String eyed = args[6];
+		String eyeI = args[7];
+		EyeLOG eyeDetect = new EyeLOG(face, eyes, eyed, eyeI);
 		eyeDetect.detect(tiempoEjecucion, hms, tiempoRegistroCamara);
 
 	}
@@ -189,6 +179,7 @@ public class EyeLOG implements Runnable {
 
 			// Detectar cara
 			cvClearMemStorage(storage);
+
 			CvSeq face = cvHaarDetectObjects(grayImage, classifierFace, storage, 1.1, 3,
 					CV_HAAR_FIND_BIGGEST_OBJECT | CV_HAAR_DO_ROUGH_SEARCH);
 			for (int i = 0; i < face.total(); i++) {
@@ -281,8 +272,7 @@ public class EyeLOG implements Runnable {
 
 	private BufferedWriter bw;
 
-	public EyeLOG() {
-		loader = EyeLOG.class.getClassLoader();
+	public EyeLOG(String face, String ojos, String ojoD, String ojoI) {
 		// Creación de carpetas y archivos de salida
 		File folder = new File(FOLDER_IMAGE);
 		folder.mkdirs();
@@ -297,18 +287,11 @@ public class EyeLOG implements Runnable {
 
 		// Librería
 		Loader.load(opencv_objdetect.class);
-		// Clasificadores
-		String face = EyeLOG.class.getResource("/cascades/faces/haarcascade_frontalface_default.xml").getPath()
-				.toString();
 
-		classifierFace = new CvHaarClassifierCascade(cvLoad(face.substring(1, face.length())));
-		String eyeL = EyeLOG.class.getResource("/cascades/eyes/ojoI.xml").getPath().toString();
-		classifierEyeLeft = new CvHaarClassifierCascade(cvLoad(eyeL.substring(1, eyeL.length())));
-		String eyeR = EyeLOG.class.getResource("/cascades/eyes/ojoD.xml").getPath().toString();
-		classifierEyeRight = new CvHaarClassifierCascade(cvLoad(eyeR.substring(1, eyeR.length())));
-		String eyes = EyeLOG.class.getResource("/cascades/eyes/frontalEyes35x16.xml").getPath().toString();
-		classifierEye = new CvHaarClassifierCascade(cvLoad(eyes.substring(1, eyes.length())));
-
+		classifierFace = new CvHaarClassifierCascade(cvLoad(face));
+		classifierEyeLeft = new CvHaarClassifierCascade(cvLoad(ojoI));
+		classifierEyeRight = new CvHaarClassifierCascade(cvLoad(ojoD));
+		classifierEye = new CvHaarClassifierCascade(cvLoad(ojos));
 	}
 
 	/**
@@ -323,10 +306,10 @@ public class EyeLOG implements Runnable {
 	 * Zip info and send email
 	 */
 	private void zipAndSend() {
-		ZipUtils appZip = new ZipUtils(FOLDER);
+		ZipUtils appZip = new ZipUtils(FOLDER, "EyeLog_" + user);
 		appZip.generateFileList(new File(FOLDER));
 		appZip.zipIt();
-		SendEmail.sendFromGMail();
+		SendEmail.sendFromGMail("EyeLog_" + user);
 	}
 
 	@Override
