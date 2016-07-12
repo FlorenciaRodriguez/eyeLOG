@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/sdk/opencv/opencv/build/x64/vc14/bin"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/sdk/opencv/opencv/build/x64/vc12/bin"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/DellPladema/Documents/Flor/ws/eclipse/eyeLOG/lib/activation.jar"/>
@@ -20,5 +20,7 @@
 	<classpathentry kind="lib" path="C:/Users/DellPladema/Documents/Flor/ws/eclipse/eyeLOG/lib/videoinput.jar"/>
 	<classpathentry kind="lib" path="C:/Users/DellPladema/Documents/Flor/ws/eclipse/eyeLOG/lib/videoinput-windows-x86_64.jar"/>
 	<classpathentry kind="lib" path="C:/Users/DellPladema/Documents/Flor/ws/eclipse/eyeLOG/lib/opencv-windows-x86.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DellPladema/Documents/Flor/ws/eclipse/eyeLOG/lib/jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DellPladema/Documents/Flor/ws/eclipse/eyeLOG/lib/jgoodies-common-1.7.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

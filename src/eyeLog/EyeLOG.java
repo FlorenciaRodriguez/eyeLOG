@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.CvMemStorage;
 import org.bytedeco.javacpp.opencv_core.CvRect;
 import org.bytedeco.javacpp.opencv_core.CvScalar;
@@ -175,6 +176,11 @@ public class EyeLOG implements Runnable {
 			cvSaveImage(FOLDER_IMAGE + "\\imgA" + idImg + ".jpg", grabbedImage);
 
 			IplImage grayImage = IplImage.create(grabber.getImageWidth(), grabber.getImageHeight(), IPL_DEPTH_8U, 1);
+			try {
+				grabber.stop();
+			} catch (Exception e1) {
+				System.out.println("No se pudo detener el grabber");
+			}
 			cvCvtColor(grabbedImage, grayImage, CV_BGR2GRAY);
 
 			// Detectar cara
@@ -237,21 +243,19 @@ public class EyeLOG implements Runnable {
 						CvScalar.MAGENTA, 2, CV_AA, 0);
 				hayOjo = "1";
 			}
-
+			opencv_core.cvClearSeq(eyes);
+//TODO se rompe por problemas con la memoria
 			// Guardar la imagen con las cosas dibujadas
 			cvSaveImage(FOLDER_IMAGE + "\\imgB" + idImg + ".jpg", grabbedImage);
+			
 			idImg++;
 			try {
 				bw.write(fecha + "," + hayCara + "," + x1 + "," + y1 + "," + x2 + "," + y2 + "," + hayOjo + "\n");
 			} catch (IOException e) {
 				System.out.println("No se pudo escrbir en el log");
 			}
-
-			try {
-				grabber.stop();
-			} catch (Exception e1) {
-				System.out.println("No se pudo detener el grabber");
-			}
+			cvClearMemStorage(storage);
+			
 
 			try {
 				Thread.sleep(tiempoRegistroCamara);
@@ -306,8 +310,8 @@ public class EyeLOG implements Runnable {
 	 * Zip info and send email
 	 */
 	private void zipAndSend() {
-		ZipUtils appZip = new ZipUtils(FOLDER, "EyeLog_" + user);
-		appZip.generateFileList(new File(FOLDER));
+		ZipUtils appZip = new ZipUtils(FOLDER, "EyeLog_" + user+".zip");
+		appZip.generateFileList(new File(FOLDER+"/log.csv"));
 		appZip.zipIt();
 		SendEmail.sendFromGMail("EyeLog_" + user);
 	}

@@ -1,0 +1,2 @@
+edad,genero,estilo de vida,ocupacion,horas descanso,usa lentes,datos lentes,otro
+,Femenino,Sedentaria,,,Si,,

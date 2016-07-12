@@ -34,7 +34,9 @@ public class ZipUtils {
 		ZipOutputStream zos = null;
 		try {
 			try {
+
 				source = source_folder.substring(source_folder.lastIndexOf("\\") + 1, source_folder.length());
+				System.out.println(source);
 			} catch (Exception e) {
 				source = source_folder;
 			}
@@ -77,6 +79,7 @@ public class ZipUtils {
 
 		// add file only
 		if (node.isFile()) {
+			System.out.println("Pasa!");
 			fileList.add(generateZipEntry(node.toString()));
 
 		}
